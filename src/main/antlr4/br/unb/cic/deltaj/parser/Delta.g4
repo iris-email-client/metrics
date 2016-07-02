@@ -304,6 +304,9 @@ literal
 
 // ANNOTATIONS
 
+feature
+    :   '@Feature' ( '(' (StringLiteral) ')')?;
+    
 annotation
     :   '@' annotationName ( '(' ( elementValuePairs | elementValue )? ')' )?
     ;
@@ -321,6 +324,7 @@ elementValuePair
 elementValue
     :   expression
     |   annotation
+    |   feature
     |   elementValueArrayInitializer
     ;
 
