@@ -305,10 +305,14 @@ literal
 // ANNOTATIONS
 
 feature
-    :   '@Feature' ( '(' (StringLiteral) ')')?;
+    :   '@' 'Feature' ( '(' (StringLiteral) ')')?;
+
+advice
+    :   '@' 'Advice' ( '(' (StringLiteral) ')')?;
 
 annotation
     : feature
+    | advice
     |   '@' annotationName ( '(' ( elementValuePairs | elementValue )? ')' )?
     ;
 
