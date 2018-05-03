@@ -21,13 +21,15 @@ deltaBody
 deltaMember
    : 'adds' '{'  packageDeclaration? importDeclaration* typeDeclaration* '}'    #addDeltaMember
    | 'modifies' qualifiedName '{' modifiesMember* '}' 							#modifyDeltaMember
-   | 'removes' qualifiedName ';' 												#removesDeltaMember
+   | 'removes' qualifiedName ';'                                                #removeDeltaMember
    ;
 
 modifiesMember
    : 'adds' importDeclaration*
    | 'adds' modifier* memberDeclaration
    | 'modifies' Identifier formalParameters ('throws' qualifiedNameList)? methodBody
+   | 'removes' Identifier formalParameters	';'
+   | 'removes' Identifier ';'	
    ; 
 
 packageDeclaration

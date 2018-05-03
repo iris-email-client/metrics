@@ -20,22 +20,22 @@ import org.junit.Test;
 public class TestParser {
 
 	private int errors;
-	
+
 	/*
-	 * An error listener for computing the number of 
-	 * errors found in a Delta compilation unit.
+	 * An error listener for computing the number of errors found in a Delta
+	 * compilation unit.
 	 */
 	class ErrorListener extends BaseErrorListener {
 		@Override
-		public void syntaxError(Recognizer<?, ?> recognizer,
-				Object offendingSymbol, int line, int charPositionInLine,
+		public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine,
 				String msg, RecognitionException e) {
+			System.out.println("Error:" + msg);
 			errors++;
 			super.syntaxError(recognizer, offendingSymbol, line, charPositionInLine, msg, e);
 		}
-		
+
 	}
-	
+
 	@Before
 	public void setUp() {
 		errors = 0;
@@ -43,7 +43,7 @@ public class TestParser {
 
 	private void parseFile(File file) throws FileNotFoundException, IOException {
 		ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(file));
-		
+
 		DeltaLexer lexer = new DeltaLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		DeltaParser parser = new DeltaParser(tokens);
@@ -51,40 +51,39 @@ public class TestParser {
 		parser.addErrorListener(new ErrorListener());
 		parser.deltaCompilationUnit();
 	}
-	
+
 	public List<File> listAllDeltaFiles(File baseDir) throws Exception {
 		List<File> res = new ArrayList<File>();
-		
-		File deltaFiles[] = baseDir.listFiles(new FileFilter() {	
+
+		File deltaFiles[] = baseDir.listFiles(new FileFilter() {
 			@Override
 			public boolean accept(File pathname) {
-				return (pathname.isDirectory() && !pathname.getName().startsWith(".")) || pathname.getName().endsWith("deltaj");
+				return (pathname.isDirectory() && !pathname.getName().startsWith("."))
+						|| pathname.getName().endsWith("deltaj");
 			}
 		});
-		
-		for(File f: deltaFiles) {
-			if(f.isDirectory()) {
+
+		for (File f : deltaFiles) {
+			if (f.isDirectory()) {
 				res.addAll(listAllDeltaFiles(f));
-			}
-			else {
+			} else {
 				res.add(f);
 			}
 		}
 		return res;
 	}
-	
+
 	@Test
 	public void testAllDeltaFiles() {
 		boolean erro = false;
 		try {
-			File f = new File(getClass().getResource("/deltas").toURI());
+			File f = new File(getClass().getResource("/deltas/reminder-app").toURI());
 			for (File file : listAllDeltaFiles(f)) {
 				System.out.print("Parsing delta file " + file.getName());
 				parseFile(file);
-				if(errors == 0) {
+				if (errors == 0) {
 					System.out.println(" Ok");
-				}
-				else {
+				} else {
 					erro = true;
 				}
 			}
